@@ -10,6 +10,8 @@ import ccxt #acessa dados de crpytos
 
 
 
+
+
 class Carteira:
 
     '''
@@ -92,6 +94,7 @@ def baixa_series(inicio, janela, par, exchange=ccxt.binanceus()):
     return df
 
 
+
 def separa_pares(par):
     '''
     Função que separa o par AAAA/BBBB em duas strings.
@@ -103,6 +106,7 @@ def separa_pares(par):
     except ValueError:
         print("Verifique o par informado no formato AAAA/BBBB")
         return None, None
+
 
 
 def lista_pares(exchange='binanceus', filtro=None):
@@ -128,7 +132,8 @@ def lista_pares(exchange='binanceus', filtro=None):
     except Exception as e:
         print(f"Erro ao acessar a API da exchange {exchange}: {e}")
         return []
-    
+
+
 
 def realiza_operacao(carteira, par, ticket_ohlcv, quantidade, operacao_data, valor='open', taxa=0.001):
     '''
@@ -179,6 +184,7 @@ def registra_historico(carteira, operacao_data, historico):
     historico.append((copy.deepcopy(carteira.posicoes), operacao_data, {"saldo": carteira.atualiza_saldo()}))
 
 
+
 def dicionario_series(pares, inicio, janela, exchange=ccxt.binanceus()):
     '''
     Função que a partir de uma lista de pares, retorna um dicionário com as Séries dos tickets
@@ -197,6 +203,7 @@ def dicionario_series(pares, inicio, janela, exchange=ccxt.binanceus()):
 
 
     return series
+
 
 
 def atualiza_data(data_str, dias=0, semanas=0, meses=0):
