@@ -21,7 +21,7 @@ class Medias_Moveis:
         self.series_historicas = copy.deepcopy(series_historicas)
         self.jan_rebalanco = jan_rebalanco
         self.jan_md_curta = jan_md_curta
-        self.jan_md_long = jan_md_longa
+        self.jan_md_longa = jan_md_longa
         self.moeda_base = moeda_base
         self.valor = valor
         self.tipo = tipo
@@ -39,22 +39,57 @@ class Medias_Moveis:
         
         for par_ticket in self.series_historicas[par_ticket]:
             if self.tipo == 'simples':
-                self.series_historicas[par_ticket]
-                ['short_mean'] = self.series_historicas[par_ticket]
-                [self.valor].rolling(window=self.jan_md_curta).mean()
+                self.series_historicas[par_ticket]['short_mean'] = (
+                    self.series_historicas[par_ticket][self.valor].
+                    rolling(window=self.jan_md_curta).mean()
+                )
             else:
-                self.series_historicas[par_ticket]
-                ['short_mean'] = self.series_historicas[par_ticket]
-                [self.valor].ewm(span=self.jan_md_curta, adjust=False).mean()
-
+                self.series_historicas[par_ticket]['short_mean'] = (
+                    self.series_historicas[par_ticket][self.valor].
+                    ewm(span=self.jan_md_curta, adjust=False).mean()
+                )
     def media_longa(self):
         
         for par_ticket in self.series_historicas[par_ticket]:
             if self.tipo == 'simples':
-                self.series_historicas[par_ticket]
-                ['long_mean'] = self.series_historicas[par_ticket]
-                [self.valor].rolling(window=self.jan_md_longa).mean()
+                self.series_historicas[par_ticket]['long_mean'] = (
+                    self.series_historicas[par_ticket][self.valor].
+                    rolling(window=self.jan_md_longa).mean()
+                )
             else:
-                self.series_historicas[par_ticket]
-                ['long_mean'] = self.series_historicas[par_ticket]
-                [self.valor].ewm(span=self.jan_md_longa, adjust=False).mean()
+                self.series_historicas[par_ticket]['long_mean'] = (
+                    self.series_historicas[par_ticket][self.valor].
+                    ewm(span=self.jan_md_longa, adjust=False).mean()
+                )
+
+    def obtem_sinais(self):
+        '''
+        Método que calcula os sinais de compra e venda.
+        '''
+
+        self.media_curta()
+        self.media_longa()
+
+        for par_ticket in self.series_historicas[par_ticket]:
+
+                self.series_historicas[par_ticket]['sign'] = 0
+
+                self.series_historicas[par_ticket].loc[
+                    self.series_historicas[par_ticket]['short_mean']
+                    > self.series_historicas[par_ticket]['long_mean'], 'sign'] = 1
+                self.series_historicas[par_ticket].loc[
+                    self.series_historicas[par_ticket]['short_mean']
+                    < self.series_historicas[par_ticket]['long_mean'], 'sign'] = -1
+
+                self.series_historicas[par_ticket]['cross_line'] = self.series_historicas[par_ticket]
+                ['sign'].diff(periods=self.jan_rebalanco - 1).fillna(0)
+
+
+    def roda_estrategia(self):
+        '''
+        
+        '''
+        for ticket in self.carteira.posicoes[ticket]:
+            pass
+
+        pass

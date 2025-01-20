@@ -62,7 +62,7 @@ class Carteira:
 
             self.atualiza_saldo()
 
-
+#### funções auxiliares ####
 
 def baixa_series(inicio, janela, par, exchange=ccxt.binanceus()):
     '''
@@ -107,6 +107,17 @@ def separa_pares(par):
         print("Verifique o par informado no formato AAAA/BBBB")
         return None, None
 
+def une_pares(ticket, moeda_base='USDT'):
+    '''
+    Função que une o par AAAA/BBBB em duas strings.
+    '''
+    try:
+        par = ticket + "/" + moeda_base
+        return par
+
+    except ValueError:
+        print("Verifique a string de entrada")
+        return None    
 
 
 def lista_pares(exchange='binanceus', filtro=None):
